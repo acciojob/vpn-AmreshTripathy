@@ -2,40 +2,29 @@
 package com.driver.model;
 
 import javax.persistence.*;
-
-/**
- * @author Amresh Tripathy
- */
-
-@Entity
 @Table
-public class Country {
-
+@Entity
+public class Country{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     private CountryName countryName;
-
     private String code;
-
-    @OneToOne(mappedBy = "originalCountry", cascade = CascadeType.ALL)
-    @JoinColumn
-    private User user;
 
     @ManyToOne
     @JoinColumn
     private ServiceProvider serviceProvider;
 
+    @OneToOne(mappedBy = "originalCountry", cascade = CascadeType.ALL)
+    private User user;
+
     public Country() {
     }
 
-    public Country(int id, CountryName countryName, String code, User user, ServiceProvider serviceProvider) {
-        this.id = id;
+
+    public Country(CountryName countryName, String code) {
         this.countryName = countryName;
         this.code = code;
-        this.user = user;
-        this.serviceProvider = serviceProvider;
     }
 
     public int getId() {
@@ -62,19 +51,19 @@ public class Country {
         this.code = code;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public ServiceProvider getServiceProvider() {
         return serviceProvider;
     }
 
     public void setServiceProvider(ServiceProvider serviceProvider) {
         this.serviceProvider = serviceProvider;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

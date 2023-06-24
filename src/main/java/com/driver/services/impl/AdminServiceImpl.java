@@ -11,6 +11,8 @@ import com.driver.services.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 @Service
 public class AdminServiceImpl implements AdminService {
     @Autowired
@@ -27,22 +29,19 @@ public class AdminServiceImpl implements AdminService {
         Admin admin = new Admin();
         admin.setUsername(username);
         admin.setPassword(password);
-
-        return adminRepository1.save(admin);
+        adminRepository1.save(admin);
+        return admin;
     }
 
     @Override
     public Admin addServiceProvider(int adminId, String providerName) {
-
-        Admin admin = adminRepository1.findById(adminId).get();
-
         ServiceProvider serviceProvider = new ServiceProvider();
+        Admin admin = adminRepository1.findById(adminId).get();
         serviceProvider.setName(providerName);
         serviceProvider.setAdmin(admin);
-
         admin.getServiceProviders().add(serviceProvider);
-
-        return adminRepository1.save(admin);
+        adminRepository1.save(admin);
+        return admin;
     }
 
     @Override
@@ -73,8 +72,8 @@ public class AdminServiceImpl implements AdminService {
             }
             country.setServiceProvider(serviceProvider);
             serviceProvider.getCountryList().add(country);
-
-            return serviceProviderRepository1.save(serviceProvider);
+            serviceProviderRepository1.save(serviceProvider);
+            return serviceProvider;
         }else{
             throw new Exception("Country not found");
         }
