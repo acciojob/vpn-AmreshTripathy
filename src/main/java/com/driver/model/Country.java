@@ -19,7 +19,7 @@ public class Country {
 
     private String code;
 
-    @OneToOne
+    @OneToOne(mappedBy = "originalCountry", cascade = CascadeType.ALL)
     @JoinColumn
     private User user;
 
