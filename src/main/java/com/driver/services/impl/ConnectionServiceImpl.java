@@ -23,9 +23,9 @@ public class ConnectionServiceImpl implements ConnectionService {
     public User connect(int userId, String countryName) throws Exception {
         User user = userRepository2.findById(userId).get();
 
-        if (user.isConnected())
+        if (user.getConnected())
             throw new Exception("Already connected");
-        else if (user.getCountry().getCountryName().name().equals(countryName))
+        else if (user.getOriginalCountry().getCountryName().name().equals(countryName))
             return user;
         else {
             List<ServiceProvider> serviceProviderList = user.getServiceProviderList();
@@ -73,7 +73,7 @@ public class ConnectionServiceImpl implements ConnectionService {
     @Override
     public User disconnect(int userId) throws Exception {
         User user = userRepository2.findById(userId).get();
-        if (!user.isConnected())
+        if (!user.getConnected())
             throw new Exception("Already disconnected");
 
         user.setMaskedIp(null);
@@ -88,18 +88,18 @@ public class ConnectionServiceImpl implements ConnectionService {
         User receiver = userRepository2.findById(receiverId).get();
 
         if (receiver.getMaskedIp().isEmpty()) {
-            if (receiver.getCountry().equals(sender.getCountry()))
+            if (receiver.getOriginalCountry().equals(sender.getOriginalCountry()))
                 return sender;
             else {
                 try {
-                    return connect(senderId, receiver.getCountry().getCountryName().name());
+                    return connect(senderId, receiver.getOriginalCountry().getCountryName().name());
                 } catch (Exception ex) {
                     throw new Exception("Cannot establish communication");
                 }
             }
         } else {
             String code = receiver.getMaskedIp().substring(0, 3);
-            if (sender.getCountry().getCode().equals(code))
+            if (sender.getOriginalCountry().getCode().equals(code))
                 return sender;
             else {
                 String countryName = "";
