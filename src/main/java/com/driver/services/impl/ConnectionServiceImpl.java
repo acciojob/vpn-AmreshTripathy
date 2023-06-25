@@ -87,19 +87,12 @@ public class ConnectionServiceImpl implements ConnectionService {
         User sender = userRepository2.findById(senderId).get();
         User receiver = userRepository2.findById(receiverId).get();
 
-        if (receiver.getMaskedIp() == null) {
-            if (receiver.getOriginalCountry().equals(sender.getOriginalCountry()))
-                return sender;
-            else {
-                try {
-                    return connect(senderId, receiver.getOriginalCountry().getCountryName().toString());
-                } catch (Exception ex) {
-                    throw new Exception("Cannot establish communication");
-                }
-            }
-        } else {
-            String code = receiver.getMaskedIp().substring(0, 3);
-            if (sender.getOriginalCountry().getCode().equals(code))
+        if(receiver.getMaskedIp()!=null){
+            String Ip = receiver.getMaskedIp();
+
+            String code= Ip.substring(0,3);
+
+            if(code.equals(sender.getOriginalCountry().getCode()))
                 return sender;
             else {
                 String countryName = "";
@@ -114,10 +107,22 @@ public class ConnectionServiceImpl implements ConnectionService {
                     countryName = CountryName.USA.toString();
                 if (code.equals(CountryName.AUS.toCode()))
                     countryName = CountryName.AUS.toString();
-
-                try {
-                    return connect(senderId, countryName);
-                } catch (Exception e) {
+                try{
+                    User updatedSender = connect(senderId,countryName);
+                    return updatedSender;
+                }catch (Exception e){
+                    throw new Exception("Cannot establish communication");
+                }
+            }
+        }else{
+            if(receiver.getOriginalCountry().equals(sender.getOriginalCountry())){
+                return sender;
+            }else{
+                String countryName = receiver.getOriginalCountry().getCountryName().toString();
+                try{
+                    User updatedSender = connect(senderId,countryName);
+                    return updatedSender;
+                }catch (Exception e){
                     throw new Exception("Cannot establish communication");
                 }
             }
