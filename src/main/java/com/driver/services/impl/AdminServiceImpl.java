@@ -55,7 +55,6 @@ public class AdminServiceImpl implements AdminService {
             Country country = new Country();
             countryName = countryName.toUpperCase();
             if (countryName.equalsIgnoreCase("ind")) {
-                System.out.println("country name is" + countryName);
                 country.setCountryName(CountryName.IND);
                 country.setCode(CountryName.IND.toCode());
             }
