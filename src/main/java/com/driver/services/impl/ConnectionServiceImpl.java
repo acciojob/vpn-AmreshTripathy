@@ -87,12 +87,12 @@ public class ConnectionServiceImpl implements ConnectionService {
         User sender = userRepository2.findById(senderId).get();
         User receiver = userRepository2.findById(receiverId).get();
 
-        if (receiver.getMaskedIp().isEmpty()) {
+        if (receiver.getMaskedIp() == null) {
             if (receiver.getOriginalCountry().equals(sender.getOriginalCountry()))
                 return sender;
             else {
                 try {
-                    return connect(senderId, receiver.getOriginalCountry().getCountryName().name());
+                    return connect(senderId, receiver.getOriginalCountry().getCountryName().toString());
                 } catch (Exception ex) {
                     throw new Exception("Cannot establish communication");
                 }
